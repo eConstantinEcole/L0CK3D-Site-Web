@@ -1,0 +1,196 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>L0K3D - Contrôle d'accès</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+<div id="mobile-menu-overlay" class="mobile-menu-overlay"></div>
+
+<nav class="sidebar">
+    <div class="logo">
+        <h1>L0K3D <span id="connection-dot" class="dot disconnected" title="Déconnecté"></span></h1>
+    </div>
+    <ul class="nav-menu">
+        <li class="nav-item">
+            <a href="#dashboard" class="nav-link active" data-page="dashboard">
+                <span>Tableau de bord</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#faces" class="nav-link" data-page="faces">
+                <span>Visages enregistrés</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#history" class="nav-link" data-page="history">
+                <span>Historique</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#settings" class="nav-link" data-page="settings">
+                <span>Paramètres</span>
+            </a>
+        </li>
+    </ul>
+
+    <div class="theme-toggle-container">
+        <button id="theme-toggle" class="theme-btn">🌙 Mode Sombre</button>
+    </div>
+</nav>
+
+<main class="main-content">
+
+    <section id="dashboard" class="page-section active">
+        <div class="page-header">
+            <h2>Tableau de bord</h2>
+            <p>Contrôle d'accès par reconnaissance faciale</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card stream-card">
+                <div id="stream-container" class="image-container">
+                    <img id="stream" src="" alt="Flux vidéo">
+                </div>
+            </div>
+
+            <div class="card control-card">
+                <div id="status-display">
+                    <span id="current-status">En attente...</span>
+                </div>
+                
+                <input id="person" type="text" placeholder="Entrez le nom de la personne">
+                
+                <label class="checkbox-container">
+                    <input type="checkbox" id="temp-access">
+                    <span>⏳ Accès temporaire visiteur (24h)</span>
+                </label>
+                
+                <div class="button-group">
+                    <button id="button-capture" title="Entrez un nom avant de capturer">Ajouter Utilisateur</button>
+                    <button id="button-recognise">Contrôle d'Accès</button>
+                </div>
+
+                <button id="button-open-door" class="full-width-btn">Ouverture Manuelle</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="faces" class="page-section">
+        <div class="page-header">
+            <h2>Visages enregistrés</h2>
+            <p>Gérez les utilisateurs autorisés</p>
+        </div>
+
+        <div class="card">
+            <div class="faces-section">
+                <h3>Liste des visages</h3>
+                <ul class="faces-list" id="face-list-container">
+                </ul>
+            </div>
+            
+            <div class="button-group mt-20">
+                <button id="delete_all">Supprimer tout</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="history" class="page-section">
+        <div class="page-header">
+            <h2>Historique</h2>
+            <p>Historique des accès et détections</p>
+        </div>
+
+        <div class="history-controls">
+            <div class="filter-group">
+                <button class="filter-btn active" data-filter="all">Tout</button>
+                <button class="filter-btn" data-filter="success">Autorisés</button>
+                <button class="filter-btn" data-filter="added">Ajoutés</button>
+                <button class="filter-btn" data-filter="deleted">Supprimés</button>
+            </div>
+            <button id="export-csv-btn" class="export-btn">📥 Exporter</button>
+        </div>
+
+        <div class="card">
+            <ul class="history-list" id="history-list">
+                <li class="history-item empty-message">
+                    <div class="time">Aucun historique disponible</div>
+                    <div class="name">Les tentatives d'accès apparaîtront ici</div>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="settings" class="page-section">
+        <div class="page-header">
+            <h2>⚙️ Paramètres du système</h2>
+        </div>
+
+        <div class="card mt-20">
+            <h3 class="settings-card-title">Minuteur de démonstration</h3>
+            <p class="settings-card-description">Programmer une ouverture automatique (pour la démonstration).</p>
+            <div class="settings-control-row">
+                <input type="number" id="auto-open-delay" value="5" min="1" max="120" class="settings-number-input">
+                <span>secondes</span>
+                <button id="btn-auto-open" class="btn-confirm settings-action-btn">Démarrer le minuteur</button>
+            </div>
+        </div>
+
+        <div class="card mt-20">
+            <h3 class="settings-card-title">Maintien de l'ouverture</h3>
+            <p class="settings-card-description">Combien de temps le verrou reste-t-il ouvert après une validation ?</p>
+            <div class="settings-control-row">
+                <input type="number" id="door-duration" value="5" min="1" max="60" class="settings-number-input">
+                <span>secondes</span>
+                <button id="btn-save-duration" class="btn-confirm settings-action-btn">Appliquer</button>
+            </div>
+        </div>
+
+        <div class="card mt-20">
+            <h3 class="settings-card-title">Délai anti-spam</h3>
+            <p class="settings-card-description">Temps d'attente avant qu'un même visage puisse déclencher une nouvelle ouverture.</p>
+            <div class="settings-control-row">
+                <input type="number" id="cooldown-duration" value="3" min="0" max="60" class="settings-number-input">
+                <span>secondes</span>
+                <button id="btn-save-cooldown" class="btn-confirm settings-action-btn">Appliquer</button>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<div id="custom-modal" class="modal-overlay">
+    <div class="modal-content">
+        <h3 id="modal-title">Confirmation</h3>
+        <p id="modal-message">Êtes-vous sûr ?</p>
+        <div class="modal-buttons">
+            <button id="modal-cancel" class="btn-cancel">Annuler</button>
+            <button id="modal-confirm" class="btn-confirm">Confirmer</button>
+        </div>
+    </div>
+</div>
+
+<div id="profile-modal" class="modal-overlay">
+    <div class="modal-content profile-content">
+        <h3 id="profile-name-display" class="profile-name-display">Nom</h3>
+        <p class="profile-stats">Ouvertures : <strong id="profile-open-count">0</strong></p>
+        
+        <div class="profile-history-container">
+            <ul id="profile-time-list" class="profile-time-list">
+                </ul>
+        </div>
+        
+        <div class="modal-buttons mt-20">
+            <button id="profile-close-btn" class="btn-cancel">Fermer</button>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
